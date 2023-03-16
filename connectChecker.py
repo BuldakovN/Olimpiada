@@ -1,16 +1,15 @@
 import re
-from socket import gethostbyname_ex
-from socket import socket, AF_INET, SOCK_STREAM
-from pythonping import ping
+from mysocket import gethostbyname_ex, Socket
+from myping import ping
 from datetime import datetime
 
 
 class ConnectChecker:
     def __init__(self, hostname, ports):
-        self.hostname, self.ip_list = self.__adressParser(hostname)
+        self.hostname, self.ip_list = self.__addressParser(hostname)
         self.ports = self.__portsParser(ports)
 
-    def __adressParser(self, hostname):
+    def __addressParser(self, hostname):
         # проверка данного hostname
         """
         Обработка адресов
@@ -53,7 +52,7 @@ class ConnectChecker:
         # пингуем ip-адреса
         print(
             "|{:^19}|{:^20}|{:^15}|{:^7}|{:^7}".format(
-                "Время", "Имя хоста", "IP-адрес", "Статус",  'Время'
+                "Время", "Имя хоста", "IP-адрес", "Статус", 'Пинг'
             )
         )
         for ip in self.ip_list:
@@ -70,7 +69,7 @@ class ConnectChecker:
 
     def __portIsOpen(self, ip, port):
         # проверка открытости порта
-        sock = socket(AF_INET, SOCK_STREAM)
+        sock = Socket()
         result = sock.connect_ex((ip, port))
         sock.close()
         return result == 0
@@ -79,19 +78,22 @@ class ConnectChecker:
         # если указаны порты, то проверяем их всех на всех данных ip-адресах
         assert len(self.ports) != 0, "Не указаны порты, используйте метод ping"
         print(
-            "|{:^20}|{:^20}|{:^15}|{:^5}|{:^10}".format(
-                "Время", "Имя хоста", "IP-адрес", "Порт", "Открытость"
+            "|{:^20}|{:^20}|{:^15}|{:^5}|{:^10}|{:^10}".format(
+                "Время", "Имя хоста", "IP-адрес", "Порт", "Открытость", "Пинг"
             )
         )
         for ip in self.ip_list:
             for port in self.ports:
-                line = "|{:^20}|{:^20}|{:^15}|{:^5}|{:^10}"
+                isOpen = self.__portIsOpen(ip, port)
+                line = "|{:^20}|{:^20}|{:^15}|{:^5}|{:^10}|{:^10}"
+                ping_result = ping(ip, count=2)
                 line = line.format(
                     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     self.hostname,
                     ip,
                     port,
-                    "Открыт" if self.__portIsOpen(ip, port) else "Закрыт\t",
+                    "Открыт" if isOpen else "Закрыт",
+                    str(ping_result.rtt_avg_ms) + ' ms' if isOpen else "None" 
                 )
                 yield line
 
