@@ -33,7 +33,7 @@ try:
             try:
                 connect = ConnectChecker(row["Host"], row["Ports"])
                 show(connect)
-            except ValueError:
+            except:
                 print(f"{row['Host']}, {row['Ports']} недоступен")
                 print("~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
