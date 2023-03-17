@@ -57,6 +57,7 @@ class ConnectChecker:
         )
         for ip in self.ip_list:
             ping_result = ping(ip, count=3)
+            print(ping_result)
             line = "|{:^19}|{:^20}|{:^15}|{:^7}|{:^7}"
             line = line.format(
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -86,14 +87,14 @@ class ConnectChecker:
             for port in self.ports:
                 isOpen = self.__portIsOpen(ip, port)
                 line = "|{:^20}|{:^20}|{:^15}|{:^5}|{:^10}|{:^10}"
-                ping_result = ping(ip, count=2)
+                ping_result = ping(ip, count=2).rtt_avg_ms
                 line = line.format(
                     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     self.hostname,
                     ip,
                     port,
                     "Открыт" if isOpen else "Закрыт",
-                    str(ping_result.rtt_avg_ms) + ' ms' if isOpen else "None" 
+                    str(ping_result) + ' ms' if isOpen else "---" 
                 )
                 yield line
 

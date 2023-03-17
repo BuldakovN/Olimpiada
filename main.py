@@ -33,12 +33,16 @@ try:
             try:
                 connect = ConnectChecker(row["Host"], row["Ports"])
                 show(connect)
+            except PermissionError:
+                print("Не хватает прав доступа для сетевых операций.")
+                exit()
             except:
                 print(f"{row['Host']}, {row['Ports']} недоступен")
                 print("~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
+
 except FileNotFoundError:
     print("Файл не найден")
 
-except Exception as e:
+except ValueError as e:
     print("Неизвестная ошиибка: ", e)
