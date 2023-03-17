@@ -17,7 +17,7 @@ Host;Ports
 
 После этого нужно перейти в репозиторий. В репозитории нужно вызвать команду
 ```bash
-python main.py path_to_csv.csv
+sudo python main.py path_to_csv.csv
 ```
 Где path_to_csv – путь до созданного csv файла
 
