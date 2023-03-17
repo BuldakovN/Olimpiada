@@ -57,7 +57,6 @@ class ConnectChecker:
         )
         for ip in self.ip_list:
             ping_result = ping(ip, count=3)
-            print(ping_result)
             line = "|{:^19}|{:^20}|{:^15}|{:^7}|{:^7}"
             line = line.format(
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
