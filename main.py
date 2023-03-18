@@ -43,10 +43,17 @@ def show(connect):
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 def main():
+    """
+    main запуск программы
+    """
     try:
+
+        # чтение файла с адресами
         with open(args.filename, "r", newline="") as file:
             reader = csv.DictReader(file, delimiter=";")
             for row in reader:
+                
+                # если хост не указан, то пропускаем
                 if row["Host"] == "":
                     continue
                 try:
@@ -59,7 +66,6 @@ def main():
                     print(f"{row['Host']}, {row['Ports']} недоступен")
                     print("~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
-
     except FileNotFoundError:
         print("Файл не найден")
 
@@ -67,6 +73,7 @@ def main():
         print("Неизвестная ошиибка: ", e)
 
 
-for i in range(args.r):
-    main()
-    sleep(args.c)
+if __name__=='__main__':
+    for i in range(args.r):
+        main()
+        sleep(args.c)
